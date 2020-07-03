@@ -37,7 +37,7 @@ run_shell()
 {
     param_number=0
 
-    echo $2 | $1 > buffer 2>&1
+    echo $2 | "$1" > buffer 2>&1
     for opt in "$@"
     do
         if [ $param_number \> 1 ]
@@ -141,11 +141,10 @@ run_leaks()
 
 ################ CLEAN SHELL ################
 
+rm -rf add_path test_cd ~/test_cd test_files ../minishell.dSYM ...
+delete_file "a b ../a ../b buffer ../buffer buffer2 prog diff_minishell.txt diff_bash.txt ../diff_minishell.txt ../diff_bash.txt leaks_minishell.txt boucle"
 if [ "$1" = "clean" ]
 then
-    rm -rf add_path test_cd ~/test_cd test_files ../minishell.dSYM
-    
-    delete_file "a b ../a ../b buffer ../buffer buffer2 prog diff_minishell.txt diff_bash.txt ../diff_minishell.txt ../diff_bash.txt leaks_minishell.txt boucle"
     exit
 fi
 
@@ -155,7 +154,7 @@ fi
 LC_ALL=C
 gcc test.c -o prog
 mkdir add_path && cd add_path && gcc ../ls.c -o ls && cd ..
-cd .. && make && cd test
+cd .. && make && cd minishell_tester
 
 echo -e "$WHITE\n\nDisplay error messages ? [$GREEN Y$WHITE /$RED N $WHITE]$RESET"
 echo -ne "$CYAN>> $RESET"
@@ -328,18 +327,33 @@ run_test 'pwd ; cd test_cd error ; pwd'
 run_test 'pwd ; cd error test_cd error ; pwd'
 run_test 'pwd ; cd ~/test_cd error ; pwd'
 run_test 'pwd ; cd error ~/test_cd error ; pwd'
-run_test 'pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. pwd '
+run_test 'pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. ; pwd ; cd .. ; pwd '
 run_test 'pwd ; cd .. | pwd'
 run_test 'pwd | cd | pwd ; cd | pwd'
-run_test 'pwd ; cd ../test ; pwd'
+run_test 'pwd ; cd ../minishell_tester ; pwd'
 run_test 'pwd ; cd ../error ; pwd'
+run_test 'pwd ; cd . ; pwd'
 run_test 'pwd ; cd ./ ; pwd'
 run_test 'pwd ; cd ../ ; pwd'
 run_test 'pwd ; cd ... ; pwd'
 run_test 'pwd ; cd .error ; pwd'
 run_test 'pwd ; cd ..error ; pwd'
-rm -rf test_cd
-rm -rf ~/test_cd
+echo -e "\n$ORANGE >> THOSE TESTS MAY HAVE TO BE CHANGED BY A DIFFERENT PATH $RESET"
+run_test 'pwd ; cd ../../../Bureau/../Bureau/../Bureau ; pwd'
+run_test 'pwd ; cd ./../../../Bureau/../Bureau/../Bureau ; pwd'
+run_test 'pwd ; cd ./../../../Bureau/././././../Bureau/././././../Bureau ; pwd'
+run_test 'pwd ; cd ~/../../home/../home/user42/Bureau/../Bureau/../Bureau ; pwd'
+run_test 'pwd ; cd ~/.. ; pwd'
+run_test 'pwd ; cd ../.. ; cd minishell/../minishell/.. ; pwd'
+run_test 'pwd ; cd ../../ ; cd ./minishell/.././minishell/../. ; pwd'
+run_test 'pwd ; cd ~ ; cd ../../../../../ ; pwd'
+run_test 'pwd ; cd ../.../ ; pwd'
+run_test 'pwd ; cd ../... ; pwd'
+mkdir ...
+run_test 'pwd ; cd ... ; pwd'
+run_test 'pwd ; cd ../minishell_tester/... ; pwd'
+run_test 'pwd ; cd .../../..././././../... ; pwd'
+rm -rf test_cd ~/test_cd ...
 
 
 #EXIT
@@ -836,8 +850,22 @@ run_leaks 'pwd ; cd test_cd error ; pwd'
 run_leaks 'pwd ; cd error test_cd error ; pwd'
 run_leaks 'pwd ; cd ~/test_cd error ; pwd'
 run_leaks 'pwd ; cd error ~/test_cd error ; pwd'
-rm -rf test_cd
-rm -rf ~/test_cd
+echo -e "\n$ORANGE >> THOSE TESTS MAY HAVE TO BE CHANGED BY A DIFFERENT PATH $RESET"
+run_leaks 'pwd ; cd ../../../Bureau/../Bureau/../Bureau ; pwd'
+run_leaks 'pwd ; cd ./../../../Bureau/../Bureau/../Bureau ; pwd'
+run_leaks 'pwd ; cd ./../../../Bureau/././././../Bureau/././././../Bureau ; pwd'
+run_leaks 'pwd ; cd ~/../home/../home/Bureau/../Bureau/../Bureau ; pwd'
+run_leaks 'pwd ; cd ~/.. ; pwd'
+run_leaks 'pwd ; cd ../.. ; cd minishell/../minishell/.. ; pwd'
+run_leaks 'pwd ; cd ../../ ; cd ./minishell/.././minishell/../. ; pwd'
+run_leaks 'pwd ; cd ~ ; cd ../../../../../ ; pwd'
+run_leaks 'pwd ; cd ../.../ ; pwd'
+run_leaks 'pwd ; cd ../... ; pwd'
+mkdir ...
+run_leaks 'pwd ; cd ... ; pwd'
+run_leaks 'pwd ; cd ../minishell_tester/... ; pwd'
+run_leaks 'pwd ; cd .../../..././././../... ; pwd'
+rm -rf ~/test_cd test_cd ...
 
 run_leaks 'exit'
 run_leaks 'exit | echo lala'
@@ -927,6 +955,6 @@ run_leaks 'touch test_file ; rm test_file'
 run_leaks 'ls'
 
 ################ END SHELL ################
-rm -rf add_path test_cd ~/test_cd test_files ../minishell.dSYM
+rm -rf add_path test_cd ~/test_cd test_files ../minishell.dSYM ...
 delete_file "a b ../a ../b buffer ../buffer buffer2 prog diff_minishell.txt diff_bash.txt ../diff_minishell.txt ../diff_bash.txt leaks_minishell.txt boucle"
 
