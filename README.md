@@ -3,7 +3,7 @@
 /!\ Your directory must be named minishell /!\
 
 
-1/ git clone https://github.com/AlexJeannot/minishell_tester.git in your project repository
+1/ git clone https://github.com/AlexJeannot/minishell_tester.git in your root project directory
 
 2/ cd minishell_tester
 
