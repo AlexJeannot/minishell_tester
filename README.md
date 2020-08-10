@@ -1,7 +1,7 @@
 # minishell_tester
 
 /!\ Your directory must be named minishell /!\
-
+/!\ You must not display your prompt /!\
 
 1/ git clone https://github.com/AlexJeannot/minishell_tester.git in your root project directory
 
