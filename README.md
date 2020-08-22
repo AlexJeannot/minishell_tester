@@ -4,6 +4,8 @@
 
 /!\ You must not display your prompt /!\
 
+/!\ You must not write "exit" when exiting your program /!\
+
 
 1/ git clone https://github.com/AlexJeannot/minishell_tester.git in your root project directory
 
